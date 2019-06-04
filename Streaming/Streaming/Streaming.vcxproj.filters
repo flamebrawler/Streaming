@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Image.cpp">
+      <Filter>Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Recorder.cpp">
+      <Filter>Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Networking\networking.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\ServerCore.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Recorder.h">
+      <Filter>Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Image.h">
+      <Filter>Imaging</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Networking\networking.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{96123602-f431-451d-83d7-8f78e3466725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imaging">
+      <UniqueIdentifier>{165ee64d-e1c9-4ef3-8f82-53dec89bc562}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\tiger.bmp" />
+  </ItemGroup>
+</Project>

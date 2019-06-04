@@ -1,0 +1,3 @@
+﻿  ServerCore.cpp
+E:\Joel's section\Programming\Streaming-20190601T221007Z-001\Streaming\src\ServerCore.cpp(25,14): warning C4244:  '=': conversion from 'int' to 'u_short', possible loss of data
+  Streaming.vcxproj -> C:\Users\flame\source\repos\Streaming\x64\Debug\Streaming.exe
