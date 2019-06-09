@@ -5,7 +5,7 @@
 #pragma comment(lib,"ws2_32")
 
 #include "Imaging/Image.h"
-#include "Networking/networking.h"
+#include "Networking/client.h"
 #include <windows.h>
 #include <gdiplus.h>
 #include <thread>
@@ -13,15 +13,20 @@
 
 using namespace std;
 
-imgdata::Image* image;
+imgdata::Image image(1,1);
 char* buffer;
 
-void receiveData(client* client, HWND hwnd, int width, int height)
+void receiveData(client* client, HWND hwnd)
 {
 	while (1)
 	{
-		image->setImage(client->Recv(buffer, width * height * 3), width, height);
+		int width = *((int*)client->Recv(4)); //get width
+		int height = *((int*)client->Recv(4)); //get height
+		cout << width << " " << height << endl;
+		buffer = new char[width * height * 1];
+		image.setImage(client->Recv(buffer, width * height * 1), width, height,1);
 		InvalidateRect(hwnd, 0, 0);
+		delete[] buffer;
 	}
 }
 
@@ -30,7 +35,7 @@ void Onpaint(HDC hdc, PAINTSTRUCT& ps)
 
 	Gdiplus::Graphics graphics(hdc);
 
-	Gdiplus::Bitmap bitmap(image->getWidth(), image->getHeight(), 3 * image->getWidth(), PixelFormat24bppRGB, (BYTE*)image->getImage());
+	Gdiplus::Bitmap bitmap(image.getWidth(), image.getHeight(), 3 * image.getWidth(), PixelFormat24bppRGB, (BYTE*)image.getImage());
 	//Gdiplus::Image bitmap(L"tiger.bmp", false);
 
 	float ratio = (float)bitmap.GetHeight() / (float)bitmap.GetWidth();
@@ -145,19 +150,13 @@ int main(int argc, char** argv)
 		return 1;
 	//get init info
 	printf("connected\n");
-	int width = *((int*)client.Recv(4)); //get width
-	printf("got width %d\n", width);
-	int height = *((int*)client.Recv(4)); //get height
-	printf("got height %d\n", height);
+	//cout << client.Recv(4) << endl;
 
-	//set up image
-	buffer = new char[width * height * 3];
-
-	image = new imgdata::Image(buffer, width, height);
+	
 	printf("thread starting\n");
 	//receive all necessary data
 
-	std::thread receiving(receiveData, &client, hwnd, width, height);
+	std::thread receiving(receiveData, &client, hwnd);
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

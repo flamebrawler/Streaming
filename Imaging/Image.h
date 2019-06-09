@@ -1,27 +1,35 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include <vector>
+#include <stdio.h>
 namespace imgdata{
 
 struct pixel{
-    char R,G,B;
+    unsigned char R,G,B;
 };
 
 class Image{
     private:
         int width;
         int height;
-        char* pixels;
+		int bits;
+        
     public:
-        Image(int width, int height);
-        Image(char* pixels,int width, int height);
-        Image(pixel* pixels,int width, int height);
+		std::vector<char> pixels;
+        Image(int width, int height,int bits = 3);
+        Image(char* pixels,int width, int height,int bits = 3);
+        Image(pixel* pixels,int width, int height,int bits = 3);
+		Image(std::vector<char> pixels, int width, int height,int bits = 3);
         Image(const Image* image);
         ~Image();
 
         pixel* getPixel(int x, int y);
-        pixel* operator[](int pos);
-        void setImage(char* pixels,int width, int height);
+        pixel* operator()(int x,int y);
+		pixel* operator[](int pos);
+		void setImage(Image image);
+        void setImage(std::vector<char> pixels,int width, int height,int bits =3);
+		void setImage(const char* pixels, int width, int height, int bits = 3);
 
         const pixel* getImage() const;
         const pixel* checkPixel(int x, int y) const;
@@ -29,7 +37,7 @@ class Image{
         float getRatio() const;
         int getHeight() const;
         int getWidth() const;
-
+		int getBits() const;
 };
 
 }

@@ -1,37 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Image.cpp">
+    <ClCompile Include="..\..\Imaging\Image.cpp">
       <Filter>Imaging</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Recorder.cpp">
-      <Filter>Imaging</Filter>
-    </ClCompile>
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Networking\networking.cpp">
+    <ClCompile Include="..\..\Networking\networking.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\ServerCore.cpp" />
+    <ClCompile Include="..\..\ServerCore.cpp" />
+    <ClCompile Include="..\..\Imaging\Recorder.cpp">
+      <Filter>Imaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Networking\sock.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Networking\server.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ClientCore.cpp" />
+    <ClCompile Include="..\..\Networking\client.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Recorder.h">
+    <ClInclude Include="..\..\Imaging\Image.h">
       <Filter>Imaging</Filter>
     </ClInclude>
-    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Image.h">
+    <ClInclude Include="..\..\Imaging\Recorder.h">
       <Filter>Imaging</Filter>
     </ClInclude>
-    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Networking\networking.h">
+    <ClInclude Include="..\..\Networking\networking.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Networking\sock.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Networking\client.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Networking\server.h">
       <Filter>Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Networking">
-      <UniqueIdentifier>{96123602-f431-451d-83d7-8f78e3466725}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Imaging">
-      <UniqueIdentifier>{165ee64d-e1c9-4ef3-8f82-53dec89bc562}</UniqueIdentifier>
+      <UniqueIdentifier>{efed8536-1a56-430a-ac54-dc9ae566a2f9}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\tiger.bmp" />
+    <Filter Include="Networking">
+      <UniqueIdentifier>{46f23179-2e23-459f-9f2f-6ae7e25291c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

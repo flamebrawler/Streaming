@@ -19,18 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Image.cpp" />
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Recorder.cpp" />
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Networking\networking.cpp" />
-    <ClCompile Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\ServerCore.cpp" />
+    <ClCompile Include="..\..\ClientCore.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\Imaging\Image.cpp" />
+    <ClCompile Include="..\..\Imaging\Recorder.cpp" />
+    <ClCompile Include="..\..\Networking\client.cpp" />
+    <ClCompile Include="..\..\Networking\networking.cpp" />
+    <ClCompile Include="..\..\Networking\server.cpp" />
+    <ClCompile Include="..\..\Networking\sock.cpp" />
+    <ClCompile Include="..\..\ServerCore.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Image.h" />
-    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Imaging\Recorder.h" />
-    <ClInclude Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\Networking\networking.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="E:\Joel%27s section\Programming\Streaming-20190601T221007Z-001\Streaming\src\tiger.bmp" />
+    <ClInclude Include="..\..\Imaging\Image.h" />
+    <ClInclude Include="..\..\Imaging\Recorder.h" />
+    <ClInclude Include="..\..\Networking\client.h" />
+    <ClInclude Include="..\..\Networking\networking.h" />
+    <ClInclude Include="..\..\Networking\server.h" />
+    <ClInclude Include="..\..\Networking\sock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -101,11 +111,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\flame\program files\opencv\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Program Files\opencv\build\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>E:\flame\program files\opencv\build\x64\vc15\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Program Files\opencv\build\x64\vc15\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opencv_world410d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -132,14 +142,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\flame\program files\opencv\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Program Files\opencv\build\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>E:\flame\program files\opencv\build\x64\vc14\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world410.lib;opencv_world410d.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Program Files\opencv\build\x64\vc15\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world410.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
