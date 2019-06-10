@@ -33,7 +33,7 @@ void receiveData(client* client, HWND hwnd)
 				//buffer = new char[width * height * 3];
 			buffers.push_back(Image(client->Recv(width * height * 3), width, height));
 			//image.setImage(client->Recv(width * height * 3), width, height);
-
+			cout << (int)buffers.back()(0, 0)->B << endl;
 			if (updating) {
 				active = buffers;
 				buffers.clear();
@@ -48,6 +48,7 @@ void Onpaint(HDC hdc, PAINTSTRUCT& ps)
 
 	Gdiplus::Graphics graphics(hdc);
 	if (!updating) {
+		
 		Gdiplus::Bitmap bitmap(active[lastframe].getWidth(), active[lastframe].getHeight(), active[lastframe].getBytes() * active[lastframe].getWidth(), PixelFormat24bppRGB, (BYTE*)active[lastframe].getImage());
 
 		float ratio = (float)bitmap.GetHeight() / (float)bitmap.GetWidth();
