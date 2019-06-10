@@ -12,21 +12,34 @@
 #include <iostream>
 
 using namespace std;
+using namespace imgdata;
 
-imgdata::Image image(1,1);
+vector<Image> buffers;
+vector<Image> active;
+
+int lastframe = -1;
+bool buffering = 0;
+
 char* buffer;
+bool connected;
+bool updating = 1;
+int width, height;
 
 void receiveData(client* client, HWND hwnd)
 {
 	while (1)
 	{
-		int width = *((int*)client->Recv(4)); //get width
-		int height = *((int*)client->Recv(4)); //get height
-		cout << width << " " << height << endl;
-		buffer = new char[width * height * 1];
-		image.setImage(client->Recv(buffer, width * height * 1), width, height,1);
-		InvalidateRect(hwnd, 0, 0);
-		delete[] buffer;
+			//cout << width << " " << height << endl;
+				//buffer = new char[width * height * 3];
+			buffers.push_back(Image(client->Recv(width * height * 3), width, height));
+			//image.setImage(client->Recv(width * height * 3), width, height);
+
+			if (updating) {
+				active = buffers;
+				buffers.clear();
+				lastframe = 0;
+				updating = 0;
+			}
 	}
 }
 
@@ -34,29 +47,31 @@ void Onpaint(HDC hdc, PAINTSTRUCT& ps)
 {
 
 	Gdiplus::Graphics graphics(hdc);
+	if (!updating) {
+		Gdiplus::Bitmap bitmap(active[lastframe].getWidth(), active[lastframe].getHeight(), active[lastframe].getBytes() * active[lastframe].getWidth(), PixelFormat24bppRGB, (BYTE*)active[lastframe].getImage());
 
-	Gdiplus::Bitmap bitmap(image.getWidth(), image.getHeight(), 3 * image.getWidth(), PixelFormat24bppRGB, (BYTE*)image.getImage());
-	//Gdiplus::Image bitmap(L"tiger.bmp", false);
+		float ratio = (float)bitmap.GetHeight() / (float)bitmap.GetWidth();
 
-	float ratio = (float)bitmap.GetHeight() / (float)bitmap.GetWidth();
+		//image positioning math
+		int height = ps.rcPaint.bottom;
+		int width = ps.rcPaint.right;
+		Gdiplus::SolidBrush brush(Gdiplus::Color(255, 0, 255, 255));
 
-	//image positioning math
-	int height = ps.rcPaint.bottom;
-	int width = ps.rcPaint.right;
-	Gdiplus::SolidBrush brush(Gdiplus::Color(255, 0, 255, 255));
+		if (ps.rcPaint.right * ratio > ps.rcPaint.bottom) {
+			width = (int)(ps.rcPaint.bottom / ratio);
+			graphics.FillRectangle(&brush, 0, 0, ps.rcPaint.right / 2 - width / 2, height);
+			graphics.FillRectangle(&brush, ps.rcPaint.right / 2 + width / 2, 0, ps.rcPaint.right / 2 - width / 2, height);
+		}
+		else {
+			height = (int)(ps.rcPaint.right * ratio);
+			graphics.FillRectangle(&brush, 0, 0, width, ps.rcPaint.bottom / 2 - height / 2);
+			graphics.FillRectangle(&brush, 0, ps.rcPaint.bottom / 2 + height / 2, width, ps.rcPaint.bottom / 2 - height / 2);
+		}
 
-	if (ps.rcPaint.right * ratio > ps.rcPaint.bottom) {
-		width = (int)(ps.rcPaint.bottom / ratio);
-		graphics.FillRectangle(&brush, 0, 0, ps.rcPaint.right / 2 - width / 2, height);
-		graphics.FillRectangle(&brush, ps.rcPaint.right / 2 + width / 2, 0, ps.rcPaint.right / 2 - width / 2, height);
+		graphics.DrawImage(&bitmap, ps.rcPaint.right / 2 - width / 2, ps.rcPaint.bottom / 2 - height / 2, width, height);
 	}
-	else {
-		height = (int)(ps.rcPaint.right * ratio);
-		graphics.FillRectangle(&brush, 0, 0, width, ps.rcPaint.bottom / 2 - height / 2);
-		graphics.FillRectangle(&brush, 0, ps.rcPaint.bottom / 2 + height / 2, width, ps.rcPaint.bottom / 2 - height / 2);
-	}
-	graphics.DrawImage(&bitmap, ps.rcPaint.right / 2 - width / 2, ps.rcPaint.bottom / 2 - height / 2, width, height);
-
+		
+	
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -71,8 +86,26 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_TIMER:
 	{
-		//InvalidateRect(hwnd, 0, 0);
-		SetTimer(hwnd, 1, 16, 0);
+		if (buffering) {
+			updating = 1;//tell thread that it needs a refill
+			buffering = 0;
+			cout << "done buffering" << endl;
+			SetTimer(hwnd, 1, (int)(1.0 / 60.0), 0);
+		}
+		if (!updating) {
+			if (lastframe < active.size()-1) {//has frames in buffer
+				SetTimer(hwnd, 1, (int)(1.0 / 60.0), 0);
+				lastframe++;
+				InvalidateRect(hwnd, 0, 0);
+				buffering = 0;
+			}
+			else {//needs to buffer
+				cout << "buffering" << endl;
+				SetTimer(hwnd, 1, 3000, 0);
+				buffering = 1;
+
+			}
+		}
 		break;
 	}
 	case WM_SIZE:
@@ -139,24 +172,29 @@ int main(int argc, char** argv)
 		return 0;
 
 	ShowWindow(hwnd, 1);
-	SetTimer(hwnd, 1, 17, 0);
 
 	MSG msg = {};
 
 	//init client
 	client client(port);
-	int connected = client.Connect(address);
-	if (connected)
-		return 1;
+	
+	while (!client.Connect(address)) {
+		cout << "attempting to connect\n" << endl;
+	}
+
 	//get init info
 	printf("connected\n");
 	//cout << client.Recv(4) << endl;
 
-	
+	width = *((int*)client.Recv(4)); //get width
+	height = *((int*)client.Recv(4)); //get height
+
 	printf("thread starting\n");
 	//receive all necessary data
 
 	std::thread receiving(receiveData, &client, hwnd);
+
+	SetTimer(hwnd, 1, 1000, 0);
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

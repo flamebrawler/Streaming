@@ -13,14 +13,14 @@ class Image{
     private:
         int width;
         int height;
-		int bits;
+		int bytes;
         
     public:
 		std::vector<char> pixels;
-        Image(int width, int height,int bits = 3);
-        Image(char* pixels,int width, int height,int bits = 3);
-        Image(pixel* pixels,int width, int height,int bits = 3);
-		Image(std::vector<char> pixels, int width, int height,int bits = 3);
+        Image(int width, int height,int bytes = 3);
+        Image(const char* pixels,int width, int height,int bytes = 3);
+        Image(pixel* pixels,int width, int height,int bytes = 3);
+		Image(std::vector<char> pixels, int width, int height,int bytes = 3);
         Image(const Image* image);
         ~Image();
 
@@ -28,8 +28,8 @@ class Image{
         pixel* operator()(int x,int y);
 		pixel* operator[](int pos);
 		void setImage(Image image);
-        void setImage(std::vector<char> pixels,int width, int height,int bits =3);
-		void setImage(const char* pixels, int width, int height, int bits = 3);
+        void setImage(std::vector<char> pixels,int width, int height,int bytes =3);
+		void setImage(const char* pixels, int width, int height, int bytes = 3);
 
         const pixel* getImage() const;
         const pixel* checkPixel(int x, int y) const;
@@ -37,7 +37,7 @@ class Image{
         float getRatio() const;
         int getHeight() const;
         int getWidth() const;
-		int getBits() const;
+		int getBytes() const;
 };
 
 }

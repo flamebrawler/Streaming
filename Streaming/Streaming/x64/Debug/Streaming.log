@@ -1,3 +1,9 @@
-﻿  ServerCore.cpp
-C:\Users\Joel\source\repos\Streaming\ServerCore.cpp(36,14): warning C4244:  '=': conversion from 'int' to 'u_short', possible loss of data
+﻿  server.cpp
+C:\Users\Joel\source\repos\Streaming\Networking\server.cpp(6,9): warning C4477:  'printf' : format string '%d' requires an argument of type 'int', but variadic argument 3 has type 'SOCKET'
+C:\Users\Joel\source\repos\Streaming\Networking\server.cpp(6,9): message :  consider using '%lld' in the format string
+C:\Users\Joel\source\repos\Streaming\Networking\server.cpp(6,9): message :  consider using '%Id' in the format string
+C:\Users\Joel\source\repos\Streaming\Networking\server.cpp(6,9): message :  consider using '%I64d' in the format string
+C:\Users\Joel\source\repos\Streaming\Networking\server.cpp(11,23): warning C4838:  conversion from 'short' to 'ADDRESS_FAMILY' requires a narrowing conversion
+C:\Users\Joel\source\repos\Streaming\Networking\server.cpp(21,25): warning C4458:  declaration of 'clients' hides class member
+C:\Users\Joel\source\repos\Streaming\Networking\server.h(12,20): message :  see declaration of 'server::clients'
   Streaming.vcxproj -> C:\Users\Joel\source\repos\Streaming\Streaming\x64\Debug\Streaming.exe

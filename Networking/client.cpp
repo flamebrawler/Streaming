@@ -1,20 +1,20 @@
 #include "client.h"
 
 
-int client::Connect(std::string IP)
+bool client::Connect(std::string IP)
 {
 	return Connect(inet_addr(IP.c_str()));
 }
 
-int client::Connect(u_long IP)
+bool client::Connect(u_long IP)
 {
 	sockaddr_in temp = { family, port, *((in_addr*)& IP) };
 	if (connect(socketfd, (struct sockaddr*) & temp, sizeof(temp)) < 0)
 	{
 		printf("Connection Failed: %d\n", WSAGetLastError());
-		return 1;
+		return 0;
 	}
-	return 0;
+	return 1;
 }
 
 void client::Send(const char* bytes, int bytenum)
@@ -22,14 +22,17 @@ void client::Send(const char* bytes, int bytenum)
 	send(socketfd, bytes, bytenum, 0);
 }
 
+client::~client() {
+	delete[] buffer;
+}
+
 const char* client::Recv(int bytenum)
 {
-	//if (buffer)
-		//delete buffer;
+	delete[] buffer;
 	buffer = new char[bytenum];
 	if (recv(socketfd, buffer, bytenum, 0) <= 0)
 	{
-		printf("Failed to receive, connection closed %d %d\n", WSAGetLastError());
+		printf("Failed to receive, connection closed %d\n", WSAGetLastError());
 		return buffer;
 	}
 	return buffer;

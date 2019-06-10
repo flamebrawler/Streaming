@@ -55,23 +55,26 @@ int main(int argc, char** argv)
 			im(i, j)->B = 10;
 		}
 	}
-	
+	//get first frame info
+	im.setImage(vid.getFrame());
+	int width = im.getWidth();
+	int height = im.getHeight();
+
 	while (1) {
 		duration<double> time_span = duration_cast<duration<double>>(high_resolution_clock::now() - timer);
-		if (time_span.count()> 1.0/24.0) {
+		if (time_span.count()> 1.0/60.0) {
 			timer = high_resolution_clock::now();
 			im.setImage(vid.getFrame());
-			int width = im.getWidth();
-			int height = im.getHeight();
+			width = im.getWidth();
+			height = im.getHeight();
 
 			//std::cout <<(int)(im.getImage()[0].R)<< std::endl;
 			//std::cout << im.pixels.size() << std::endl;
 			for (int i = 0; i < server.clients.size(); i++) {
 				if (server.clients[i].getSocketfd()) {
-					server.Send(&server.clients[i], (char*)& width, 4);
-					server.Send(&server.clients[i], (char*)& height, 4);
-					
-					server.Send(&server.clients[i], (char*)im.getImage() , width * height * im.getBits());
+
+					//cout << (int)im.getImage()[800000].B<<" "<<im.getBytes() << endl;
+					server.Send(&server.clients[i], (char*)im.getImage() , width * height * 3);
 				}
 			}
 		}
@@ -80,6 +83,8 @@ int main(int argc, char** argv)
 			
 			for (int i = 0; i < server.waitlist.size(); i++) {
 				printf((server.waitlist[i].getAddress() + " connected\n").c_str());
+				server.Send(&server.waitlist[i], (char*)& width, 4);
+				server.Send(&server.waitlist[i], (char*)& height, 4);
 			}	
 			server.updateClients();
 			accepting = 1;

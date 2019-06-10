@@ -12,12 +12,12 @@ imgdata::Image videoLoader::getFrame() {
 	cv::Mat frame;
 	*vid >> frame;
 	std::vector<char> result;
-	if (frame.isContinuous()) 
-		result.assign(frame.data, frame.data + frame.total());	
-	else 
-		for (int i = 0; i < frame.rows; ++i) 
-			result.insert(result.end(), frame.ptr<char>(i), frame.ptr<char>(i) + frame.cols);
 	
-	imgdata::Image im(result, frame.size().width, frame.size().height,1);
+	result.assign(frame.data, frame.data + 3*frame.total());	
+	//std::cout << frame.total() << "\n";
+	//std::cout << result.size()<<" "<<(int)(frame.ptr<imgdata::pixel>(639,1239)->R) <<"\n";
+	//std::cout << (int)result[2400000] << "\n";
+	imgdata::Image im(result, frame.size().width, frame.size().height);
+	result.clear();
 	return im;
 }

@@ -62,14 +62,14 @@ void server::Send(sock* client, const char* bytes, int bytenum)
 	//std::cout << "hello " << (int)bytes[2400000] << "\n";
 	if(client->getSocketfd()!=0)
 	if (send(client->getSocketfd(), bytes, bytenum, 0) == SOCKET_ERROR) {
-		printf("send failed: %d\n", WSAGetLastError());
+		//printf("send failed: %d\n", WSAGetLastError());
 	}
 }
 
 const char* server::Recv(SOCKET clientfd, int bytenum)
 {
-	//if (buffer)
-	//	delete[] buffer;
+	if (buffer)
+		delete[] buffer;
 	buffer = new char[bytenum];
 
 	int result = recv(clientfd, buffer, bytenum, 0);
@@ -95,8 +95,8 @@ char* server::Recv(sock* client, char* buff, int bytenum) {
 
 const char* server::Recv(sock* client, int bytenum)
 {
-	//if (buffer)
-	//	delete[] buffer;
+	if (buffer)
+		delete[] buffer;
 	buffer = new char[bytenum];
 	int result = recv(client->getSocketfd(), buffer, bytenum, 0);
 
