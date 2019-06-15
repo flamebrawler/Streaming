@@ -2,6 +2,4 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vscode/ipch
 /.vs
-/Streaming/.vs/Streaming/v16
