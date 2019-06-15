@@ -14,9 +14,8 @@ class Image{
         int width;
         int height;
 		int bytes;
-        
-    public:
 		std::vector<char> pixels;
+    public:
         Image(int width, int height,int bytes = 3);
         Image(const char* pixels,int width, int height,int bytes = 3);
         Image(pixel* pixels,int width, int height,int bytes = 3);

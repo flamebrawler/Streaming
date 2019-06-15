@@ -31,40 +31,47 @@ int main(int argc, char** argv)
 {
 	auto timer = high_resolution_clock::now();
 	
-	u_short port = 12345;
+	u_short port = 888;
+	std::string file = "D: / Downloads / Top 5 iOS 13 Features!.mp4";
+
 	if (argc > 1) {
 		port = atoi(argv[1]);
-		printf("connected to port %d\n", port);
+		
+		if (argc > 2) {
+			file = argv[2];	
+		}
 	}
+
+	printf("connected to port %d\n", port);
+	printf("using video %s\n", file.c_str());
 	server server(port);
 	server.Listen(5);
 
 	std::thread addClients(addClient, &server);
 
-	videoLoader vid("D:/Downloads/Top 5 iOS 13 Features!.mp4");
+	videoLoader vid(file);
 	printf("-----------------\n");
-	imgdata::Image im(1,1);
+	imgdata::Image im(40,40);
+	
 
 	//client.Connect("127.0.0.1");
 	
-	for (int i = 0; i < im.getWidth(); i++) {
-		for (int j = 0; j < im.getHeight(); j++) {
-			//printf("hi %d\n",im.getWidth()*j +i);
-			im(i,j)->R = 0;
-			im(i, j)->G = 0;
-			im(i, j)->B = 10;
-		}
-	}
 	//get first frame info
 	im.setImage(vid.getFrame());
 	int width = im.getWidth();
 	int height = im.getHeight();
 
 	while (1) {
-		duration<double> time_span = duration_cast<duration<double>>(high_resolution_clock::now() - timer);
-		if (time_span.count()> 1.0/60.0) {
-			timer = high_resolution_clock::now();
+		//duration<double> time_span = duration_cast<duration<double>>(high_resolution_clock::now() - timer);
+		//if (time_span.count()> 1.0/60.0) {
+			//timer = high_resolution_clock::now();
 			im.setImage(vid.getFrame());
+			*im[0] = { 7,7,7};
+			printf("%d %d %d", im[0]->R, im[0]->G, im[0]->B);
+			/*
+			for (int i = 0; i < im.getWidth() * im.getHeight(); i++) {
+				*im[i] = {im[i]->R, 0, 0};
+			}*/
 			width = im.getWidth();
 			height = im.getHeight();
 
@@ -74,10 +81,11 @@ int main(int argc, char** argv)
 				if (server.clients[i].getSocketfd()) {
 
 					//cout << (int)im.getImage()[800000].B<<" "<<im.getBytes() << endl;
+					cout << (int)im(0, 0)->B << " " << (int)im(0, 0)->G << " " << (int)im(0, 0)->R <<" "<<width*height*3<< endl;
 					server.Send(&server.clients[i], (char*)im.getImage() , width * height * 3);
 				}
 			}
-		}
+		//}
 
 		if (!accepting) {
 			

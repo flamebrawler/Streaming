@@ -10,6 +10,7 @@
 #include <gdiplus.h>
 #include <thread>
 #include <iostream>
+#include "Imaging/Recorder.h"
 
 using namespace std;
 using namespace imgdata;
@@ -22,24 +23,33 @@ bool buffering = 0;
 
 char* buffer;
 bool connected;
-bool updating = 1;
+bool updating = 0;
 int width, height;
+
+
+bool receiving = 1;
 
 void receiveData(client* client, HWND hwnd)
 {
-	while (1)
+	while (receiving)
 	{
-			//cout << width << " " << height << endl;
-				//buffer = new char[width * height * 3];
-			buffers.push_back(Image(client->Recv(width * height * 3), width, height));
-			//image.setImage(client->Recv(width * height * 3), width, height);
-			cout << (int)buffers.back()(0, 0)->B << endl;
-			if (updating) {
-				active = buffers;
-				buffers.clear();
-				lastframe = 0;
-				updating = 0;
-			}
+		vector<char> received(width*height*3);
+		const char* temp = client->Recv(width * height * 3);
+		memcpy(&received[0],temp, width * height * 3);
+		//printf("%d %d %d\n", (uchar)received[0], (uchar)received[1], (uchar)received[2]);
+		Image a = Image(received, width, height);
+		if (a[0]->R != 7 && a[0]->G != 7 && a[0]->B != 7)
+			printf("didn't work---------------------------------------------------------\n");
+		buffers.push_back(Image(client->Recv(width * height * 3), width, height));
+		//image.setImage(client->Recv(width * height * 3), width, height);
+		
+		if (updating) {
+			active = buffers;
+			buffers.clear();
+			lastframe = 0;
+			updating = 0;
+			//receiving = 0;
+		}
 	}
 }
 
@@ -47,8 +57,9 @@ void Onpaint(HDC hdc, PAINTSTRUCT& ps)
 {
 
 	Gdiplus::Graphics graphics(hdc);
-	if (!updating) {
+	if (!updating && active.size()>0) {
 		
+		//printf("%d %d %d\n", active[lastframe][0]->R ,active[lastframe][0]->G, active[lastframe][0]->B);
 		Gdiplus::Bitmap bitmap(active[lastframe].getWidth(), active[lastframe].getHeight(), active[lastframe].getBytes() * active[lastframe].getWidth(), PixelFormat24bppRGB, (BYTE*)active[lastframe].getImage());
 
 		float ratio = (float)bitmap.GetHeight() / (float)bitmap.GetWidth();
@@ -87,22 +98,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_TIMER:
 	{
+		//printf("%d %d %d\n", buffering, lastframe, active.size());
 		if (buffering) {
 			updating = 1;//tell thread that it needs a refill
 			buffering = 0;
 			cout << "done buffering" << endl;
-			SetTimer(hwnd, 1, (int)(1.0 / 60.0), 0);
+			//SetTimer(hwnd, 1, (int)(1.0 / 60.0), 0);
 		}
 		if (!updating) {
 			if (lastframe < active.size()-1) {//has frames in buffer
-				SetTimer(hwnd, 1, (int)(1.0 / 60.0), 0);
+				SetTimer(hwnd, 1, (int)(1000.0/24.0), 0);
 				lastframe++;
 				InvalidateRect(hwnd, 0, 0);
 				buffering = 0;
 			}
 			else {//needs to buffer
 				cout << "buffering" << endl;
-				SetTimer(hwnd, 1, 3000, 0);
+				SetTimer(hwnd, 1, 2000, 0);
 				buffering = 1;
 
 			}
@@ -126,23 +138,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 int main(int argc, char** argv)
 {
 	//command line use
-	int port = 12345;
+	int port = 888;
 	std::string address = "127.0.0.1";
 	if (argc > 1)
 	{
 		port = atoi(argv[1]);
 		if (argc > 2)
 			address = std::string(argv[2]);
-		printf("connected to %s on port %d\n", address.c_str(), port);
+		
 	}
-
+	printf("connected to %s on port %d\n", address.c_str(), port);
 	//set up window
 	HINSTANCE hInstance = GetModuleHandle(0);
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
 
-	const char* CLASS_NAME = "Sample Window Class";
 	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+	const char* CLASS_NAME = "Sample Window Class";
 
 	WNDCLASS wc = {};
 
@@ -195,7 +208,7 @@ int main(int argc, char** argv)
 
 	std::thread receiving(receiveData, &client, hwnd);
 
-	SetTimer(hwnd, 1, 1000, 0);
+	SetTimer(hwnd, 1, 17, 0);
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
